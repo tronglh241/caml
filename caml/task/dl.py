@@ -44,10 +44,10 @@ class TrainTask(DLTask):
 
     def upload_model(
         self,
-        model_file: str,
+        path: str,
     ) -> None:
         self._task.update_output_model(
-            model_file,
+            path,
         )
 
 

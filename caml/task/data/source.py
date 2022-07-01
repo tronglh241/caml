@@ -3,5 +3,9 @@ from abc import ABC, abstractmethod
 
 class DataSource(ABC):
     @abstractmethod
-    def abc():
+    def samples(self) -> list:
+        pass
+
+    @abstractmethod
+    def create_dataset(self) -> str:
         pass
