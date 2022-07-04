@@ -20,7 +20,10 @@ class Strategy(ABC):
 
     @staticmethod
     def get(strategy: str, **kwargs: Any) -> Strategy:
-        return Strategy.STRATEGIES[strategy](**kwargs)
+        if strategy in Strategy.STRATEGIES:
+            return Strategy.STRATEGIES[strategy](**kwargs)
+        else:
+            raise ValueError(f'Unsupported strategy {strategy}. Please use one of {Strategy.STRATEGIES}.')
 
 
 def register_strategy(name):

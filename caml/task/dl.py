@@ -3,7 +3,7 @@ from typing import Any, Dict
 
 from caml.config import Config
 from caml.dataset import Dataset
-from caml.model import Model
+from caml.model import EvalModel, Model, TrainModel
 from caml.task.task import Task
 
 
@@ -30,7 +30,7 @@ class DLTask(Task, ABC):
 class TrainTask(DLTask):
     def process(
         self,
-        model: Model,
+        model: TrainModel,
         dataset: Dataset,
     ) -> None:
         X = dataset.X()
@@ -54,13 +54,15 @@ class TrainTask(DLTask):
 class EvalTask(DLTask):
     def process(
         self,
-        model: Model,
+        model: EvalModel,
         dataset: Dataset,
     ) -> None:
         X = dataset.X()
         y = dataset.y()
+
         pred = model.predict(X)
         score_name, score_value = model.eval(pred, y)
+
         self.upload_score(score_name, score_value)
 
     def upload_score(

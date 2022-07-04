@@ -14,11 +14,15 @@ class Model(ABC):
     ):
         if id_ is not None:
             self.path = _Model(id_).get_local_copy()
-        elif path is not None:
-            self.path = path
         else:
-            raise ValueError('Must specify `path` or `id_`.')
+            self.path = path
 
+    @abstractmethod
+    def load_model(self, path: str) -> None:
+        pass
+
+
+class TrainModel(Model):
     @abstractmethod
     def fit(
         self,
@@ -27,6 +31,12 @@ class Model(ABC):
     ) -> None:
         pass
 
+    @abstractmethod
+    def best_model(self) -> Optional[str]:
+        pass
+
+
+class EvalModel(Model):
     @abstractmethod
     def predict(
         self,
@@ -47,12 +57,4 @@ class Model(ABC):
         pred: list,
         y: list,
     ) -> Tuple[str, float]:
-        pass
-
-    @abstractmethod
-    def load_model(self, path: str) -> None:
-        pass
-
-    @abstractmethod
-    def best_model(self) -> Optional[str]:
         pass
