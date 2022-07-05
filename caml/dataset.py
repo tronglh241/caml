@@ -27,5 +27,11 @@ class Dataset(ABC):
         pass
 
     @abstractmethod
-    def load_dataset(self, path: str) -> None:
+    def load_dataset(
+        self,
+        path: str,
+    ) -> None:
         pass
+
+    def load(self) -> None:
+        self.load_dataset(self.path)

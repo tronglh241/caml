@@ -1,4 +1,5 @@
 import random
+from typing import List
 
 from caml.model import Model
 
@@ -12,7 +13,7 @@ class Random(Strategy):
         pool: list,
         n_samples: int = None,
         model: Model = None,
-    ) -> list:
+    ) -> List[int]:
         _n_samples = len(pool) if n_samples is None else n_samples
-        samples = random.sample(population=pool, k=_n_samples)
+        samples = random.sample(population=range(len(pool)), k=_n_samples)
         return samples

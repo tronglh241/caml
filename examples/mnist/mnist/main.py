@@ -28,6 +28,8 @@ def train(
         'models',
         score_function=lambda evaluator: evaluator.state.metrics['accuracy'],
         score_name='accuracy',
+        require_empty=False,
+        n_saved=10,
     )
 
     trainer = create_supervised_trainer(model, optimizer, criterion, device=device)
@@ -72,4 +74,4 @@ def train(
 
     writer.close()
 
-    return best_model_saver.last_checkpoint
+    return str(best_model_saver.last_checkpoint) if best_model_saver.last_checkpoint else None

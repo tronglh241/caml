@@ -4,7 +4,7 @@ from clearml import Dataset as _Dataset
 from clearml import TaskTypes
 
 from caml.config import Config
-from caml.task.data.strategy.strategy import Strategy
+from caml.strategy.strategy import Strategy
 from caml.task.task import Task
 
 
@@ -34,10 +34,14 @@ class DataQueryTask(Task):
 
         _strategy = Strategy.get(strategy, **strategy_kwargs)
 
-        samples = data_source.samples()
-        samples = _strategy.query(samples, n_samples, model)
+        samples, targets = data_source.samples()
+        indices = _strategy.query(samples, n_samples, model)
+        samples = [samples[i] for i in indices]
 
-        data_path = data_source.create_dataset(samples)
+        if targets:
+            targets = [targets[i] for i in indices]
+
+        data_path = data_source.create_dataset(samples, targets)
         dataset = _Dataset.create(
             dataset_name=dataset_name,
             dataset_project=self.project_name,

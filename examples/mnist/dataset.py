@@ -1,7 +1,4 @@
-import tempfile
 from pathlib import Path
-
-from torchvision.datasets import MNIST
 
 from caml.dataset import Dataset
 
@@ -20,20 +17,16 @@ class MNISTDataset(Dataset):
     def y(self) -> list:
         return self._y
 
-    def load_dataset(self, path: str) -> None:
-        dataset = MNIST(download=False, root=path, train=True)
-        tmp_dir = Path(tempfile.gettempdir()).joinpath('MNIST')
-        tmp_dir.mkdir(parents=True, exist_ok=True)
-
+    def load_dataset(
+        self,
+        path: str,
+    ) -> None:
         im_paths = []
         numbers = []
 
-        for img, number in dataset:
-            _, im_file = tempfile.mkstemp(suffix='.jpg', dir=str(tmp_dir))
-            img.save(str(im_file))
-
+        for im_file in Path(path).glob('*/*.jpg'):
             im_paths.append(im_file)
-            numbers.append(number)
+            numbers.append(int(im_file.parent.name))
 
         self._X = im_paths
         self._y = numbers

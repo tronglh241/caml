@@ -1,0 +1,15 @@
+project_name: Test
+task_name: Eval MNIST
+execution:
+  model_conf:
+    module: examples.mnist.model
+    name: MNISTEvalModel
+    kwargs:
+      id_: 36f92ad23dcb4c33861a008e42a2431d
+      batch_size: 64
+  dataset_conf:
+    module: examples.mnist.dataset
+    name: MNISTDataset
+    kwargs:
+      split: test
+      path: .

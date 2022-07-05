@@ -9,8 +9,11 @@ EXECUTION_PARAMS = 'Execution'
 class Task(ABC):
     _requirements = [
         ('clearml', ''),
+        ('yacs', ''),
     ]
     _task_init: Dict[str, Any] = {
+        'output_uri': True,
+        'auto_connect_arg_parser': False,
     }
 
     def __init__(

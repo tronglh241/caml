@@ -14,7 +14,6 @@ Keyword.NOT_EVAL.NAME = 'name'
 Keyword.MODULE = Keyword.NOT_EVAL.MODULE
 Keyword.NAME = Keyword.NOT_EVAL.NAME
 Keyword.KWARGS = 'kwargs'
-Keyword.EXTRALIBS = 'extralibs'
 
 
 def _eval(
@@ -40,34 +39,13 @@ def _eval(
     elif isinstance(config, list):
         config = list(map(lambda ele: _eval(ele, globals_, locals_), config))
 
-    elif isinstance(config, str):
-        config = eval(config, globals_, locals_)
-
     return config
 
 
 class Config(CfgNode):
     def eval(self) -> Any:
         config = org_config = self.clone()
-        extralibs = CfgNode()
-
-        # Generate extra libs
-        for alias, lib_info in config.pop(Keyword.EXTRALIBS, {}).items():
-            if isinstance(lib_info, dict):
-                module = lib_info[Keyword.MODULE]
-                name = lib_info[Keyword.NAME]
-                lib = getattr(import_module(module), name)
-            else:
-                lib = import_module(lib_info)
-
-            extralibs[alias] = lib
-
-        # Eval config
-        config = _eval(config, extralibs, org_config)
-
-        if extralibs:
-            config[Keyword.EXTRALIBS] = extralibs
-
+        config = _eval(config, None, org_config)
         return config
 
     @staticmethod
@@ -76,6 +54,3 @@ class Config(CfgNode):
             config = Config(yaml.safe_load(f))
 
         return config
-
-    def state_dict(self) -> str:
-        return self.dump(sort_keys=False)

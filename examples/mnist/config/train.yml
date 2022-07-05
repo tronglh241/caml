@@ -1,0 +1,15 @@
+project_name: Test
+task_name: Train MNIST
+execution:
+  model_conf:
+    module: examples.mnist.model
+    name: MNISTTrainModel
+    kwargs:
+      id_: 36f92ad23dcb4c33861a008e42a2431d
+      num_epochs: 2
+      batch_size: 64
+  dataset_conf:
+    module: examples.mnist.dataset
+    name: MNISTDataset
+    kwargs:
+      path: .

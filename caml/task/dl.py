@@ -15,7 +15,6 @@ class DLTask(Task, ABC):
     ) -> None:
         model = Config(model_conf).eval()
         dataset = Config(dataset_conf).eval()
-
         self.process(model, dataset)
 
     @abstractmethod
@@ -33,10 +32,11 @@ class TrainTask(DLTask):
         model: TrainModel,
         dataset: Dataset,
     ) -> None:
+        dataset.load()
+        model.load()
         X = dataset.X()
         y = dataset.y()
         model.fit(X, y)
-
         best_model = model.best_model()
 
         if best_model:
@@ -57,12 +57,12 @@ class EvalTask(DLTask):
         model: EvalModel,
         dataset: Dataset,
     ) -> None:
+        dataset.load()
+        model.load()
         X = dataset.X()
         y = dataset.y()
-
         pred = model.predict(X)
         score_name, score_value = model.eval(pred, y)
-
         self.upload_score(score_name, score_value)
 
     def upload_score(

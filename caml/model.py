@@ -17,8 +17,15 @@ class Model(ABC):
         else:
             self.path = path
 
+    def load(self) -> None:
+        if self.path:
+            self.load_model(self.path)
+
     @abstractmethod
-    def load_model(self, path: str) -> None:
+    def load_model(
+        self,
+        path: str,
+    ) -> None:
         pass
 
 

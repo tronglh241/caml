@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Type
+from typing import Any, Dict, List, Type
 
 from caml.model import Model
 
@@ -15,11 +15,14 @@ class Strategy(ABC):
         pool: list,
         n_samples: int = None,
         model: Model = None,
-    ) -> list:
+    ) -> List[int]:
         pass
 
     @staticmethod
-    def get(strategy: str, **kwargs: Any) -> Strategy:
+    def get(
+        strategy: str,
+        **kwargs: Any,
+    ) -> Strategy:
         if strategy in Strategy.STRATEGIES:
             return Strategy.STRATEGIES[strategy](**kwargs)
         else:
@@ -28,6 +31,9 @@ class Strategy(ABC):
 
 def register_strategy(name):
     def decorator(strategy):
+        if name in Strategy.STRATEGIES:
+            raise ValueError(f'`{name}` is already registered.')
+
         Strategy.STRATEGIES[name] = strategy
         return strategy
 

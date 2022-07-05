@@ -110,7 +110,7 @@ class MNISTEvalModel(EvalModel):
         preds = []
 
         with torch.no_grad():
-            for img in iter(loader):
+            for img, in iter(loader):
                 pred = self.model(img)
                 pred = pred.argmax(dim=1)
                 preds.extend(pred.tolist())
@@ -125,7 +125,7 @@ class MNISTEvalModel(EvalModel):
         preds = []
 
         with torch.no_grad():
-            for img in iter(loader):
+            for img, in iter(loader):
                 pred = self.model(img)
                 preds.extend(pred.tolist())
 
@@ -137,7 +137,7 @@ class MNISTEvalModel(EvalModel):
         y: list,
     ) -> Tuple[str, float]:
         assert len(pred) == len(y)
-        n_trues = sum([_pred == y for _pred, _y in zip(pred, y)])
+        n_trues = sum([_pred == _y for _pred, _y in zip(pred, y)])
         acc = n_trues / len(y)
         return 'accuracy', acc
 
