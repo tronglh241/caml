@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from caml.model import Model
+from caml.model import EvalModel
 
 from .strategy import Strategy, register_strategy
 
@@ -12,7 +12,7 @@ class Random(Strategy):
         self,
         pool: list,
         n_samples: int = None,
-        model: Model = None,
+        model: EvalModel = None,
     ) -> List[int]:
         _n_samples = len(pool) if n_samples is None else n_samples
         samples = random.sample(population=range(len(pool)), k=_n_samples)

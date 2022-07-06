@@ -9,8 +9,8 @@ from typing import List
 
 import yaml
 
-from .task.query import DataQueryTask
 from .task.dl import EvalTask, TrainTask
+from .task.query import DataQueryTask
 from .task.task import Task
 
 REQUIREMENT_FILE = 'requirements.txt'

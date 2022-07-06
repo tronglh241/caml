@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Type
 
-from caml.model import Model
+from caml.model import EvalModel
 
 
 class Strategy(ABC):
@@ -14,7 +14,7 @@ class Strategy(ABC):
         self,
         pool: list,
         n_samples: int = None,
-        model: Model = None,
+        model: EvalModel = None,
     ) -> List[int]:
         pass
 

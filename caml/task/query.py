@@ -25,8 +25,8 @@ class DataQueryTask(Task):
         strategy: str,
         data_source_conf: Dict[str, Any],
         model_conf: Dict[str, Any] = None,
-        n_samples: int = None,
         strategy_kwargs: Dict[str, Any] = None,
+        n_samples: int = None,
     ) -> None:
         data_source = Config(data_source_conf).eval()
         model = Config(model_conf).eval() if model_conf else None
