@@ -1,3 +1,4 @@
+import random
 from pathlib import Path
 
 from caml.dataset import Dataset
@@ -21,12 +22,15 @@ class MNISTDataset(Dataset):
         self,
         path: str,
     ) -> None:
-        im_paths = []
+        im_files = []
         numbers = []
 
-        for im_file in Path(path).glob('*/*.jpg'):
-            im_paths.append(im_file)
+        imgs = list(Path(path).glob('*/*.jpg'))
+        random.shuffle(imgs)
+
+        for im_file in imgs:
+            im_files.append(im_file)
             numbers.append(int(im_file.parent.name))
 
-        self._X = im_paths
+        self._X = im_files
         self._y = numbers

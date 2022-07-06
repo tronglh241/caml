@@ -20,7 +20,7 @@ def get_data_loader(
 ) -> DataLoader:
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
     dataset = MNISTDataset(
-        im_paths=X,
+        im_files=X,
         numbers=y,
         transform=transform,
     )

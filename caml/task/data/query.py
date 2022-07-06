@@ -22,17 +22,17 @@ class DataQueryTask(Task):
 
     def execute(
         self,
-        dataset_name: str,
         strategy: str,
         data_source_conf: Dict[str, Any],
         model_conf: Dict[str, Any] = None,
         n_samples: int = None,
-        **strategy_kwargs: Any,
+        strategy_kwargs: Dict[str, Any] = None,
     ) -> None:
         data_source = Config(data_source_conf).eval()
         model = Config(model_conf).eval() if model_conf else None
 
-        _strategy = Strategy.get(strategy, **strategy_kwargs)
+        _strategy_kwargs = {} if strategy_kwargs is None else strategy_kwargs
+        _strategy = Strategy.get(strategy, **_strategy_kwargs)
 
         samples, targets = data_source.samples()
         indices = _strategy.query(samples, n_samples, model)
@@ -43,8 +43,6 @@ class DataQueryTask(Task):
 
         data_path = data_source.create_dataset(samples, targets)
         dataset = _Dataset.create(
-            dataset_name=dataset_name,
-            dataset_project=self.project_name,
             use_current_task=True,
         )
         dataset.add_files(path=data_path)

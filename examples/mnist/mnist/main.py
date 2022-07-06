@@ -52,8 +52,8 @@ def train(
         print(
             f'Training Results - Epoch: {engine.state.epoch} Avg accuracy: {avg_accuracy:.2f} Avg loss: {avg_nll:.2f}'
         )
-        writer.add_scalar('training/avg_loss', avg_nll, engine.state.epoch)
-        writer.add_scalar('training/avg_accuracy', avg_accuracy, engine.state.epoch)
+        writer.add_scalar('loss/training', avg_nll, engine.state.epoch)
+        writer.add_scalar('accuracy/training', avg_accuracy, engine.state.epoch)
 
     @trainer.on(Events.EPOCH_COMPLETED)
     def log_validation_results(engine):
@@ -64,8 +64,8 @@ def train(
         print(
             f'Validation Results - Epoch: {engine.state.epoch} Avg accuracy: {avg_accuracy:.2f} Avg loss: {avg_nll:.2f}'
         )
-        writer.add_scalar('valdation/avg_loss', avg_nll, engine.state.epoch)
-        writer.add_scalar('valdation/avg_accuracy', avg_accuracy, engine.state.epoch)
+        writer.add_scalar('loss/valdation', avg_nll, engine.state.epoch)
+        writer.add_scalar('accuracy/valdation', avg_accuracy, engine.state.epoch)
 
     evaluator.add_event_handler(Events.COMPLETED, best_model_saver, {'model': model})
 

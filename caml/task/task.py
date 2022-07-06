@@ -24,6 +24,7 @@ class Task(ABC):
         execution: Dict[str, Any] = None,
         requirement_file: str = None,
         remote: bool = False,
+        queue_name: str = 'default',
     ):
         super(Task, self).__init__()
         self.project_name = project_name
@@ -32,6 +33,7 @@ class Task(ABC):
         self.execution = execution if execution else {}
         self.requirement_file = requirement_file
         self.remote = remote
+        self.queue_name = queue_name
 
     @property
     def _task(self):
@@ -55,6 +57,9 @@ class Task(ABC):
                 self.execution,
                 name=EXECUTION_PARAMS,
             )
+
+        if self.remote:
+            self._task.execute_remotely(self.queue_name)
 
         self.execute(**self.execution)
 

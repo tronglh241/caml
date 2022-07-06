@@ -5,11 +5,10 @@ execution:
     module: examples.mnist.model
     name: MNISTTrainModel
     kwargs:
-      id_: 36f92ad23dcb4c33861a008e42a2431d
-      num_epochs: 2
+      num_epochs: 10
       batch_size: 64
   dataset_conf:
     module: examples.mnist.dataset
     name: MNISTDataset
     kwargs:
-      path: .
+      id_: 619fb114238d4448a041a4665e0ff9ee

@@ -8,24 +8,24 @@ from torch.utils.data import Dataset
 class MNISTDataset(Dataset):
     def __init__(
         self,
-        im_paths: List[str],
+        im_files: List[str],
         numbers: List[int] = None,
         transform: Callable = None,
     ):
         super(MNISTDataset, self).__init__()
-        self.im_paths = im_paths
+        self.im_files = im_files
         self.numbers = numbers
         self.transform = transform
 
         if self.numbers is not None:
-            assert len(self.im_paths) == len(self.numbers)
+            assert len(self.im_files) == len(self.numbers)
 
     def __len__(self) -> int:
-        return len(self.im_paths)
+        return len(self.im_files)
 
     def __getitem__(self, idx: int) -> Union[Tuple[torch.Tensor], Tuple[torch.Tensor, int]]:
-        im_path = self.im_paths[idx]
-        img = Image.open(im_path).convert('L')
+        im_file = self.im_files[idx]
+        img = Image.open(im_file).convert('L')
 
         if self.transform:
             img = self.transform(img)

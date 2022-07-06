@@ -24,17 +24,17 @@ class MNISTSource(DataSource):
         tmp_dir = Path(tempfile.mkdtemp())
         tmp_dir.mkdir(parents=True, exist_ok=True)
 
-        im_paths = []
+        im_files = []
         numbers = []
 
         for img, number in dataset:
             _, im_file = tempfile.mkstemp(suffix='.jpg', dir=str(tmp_dir))
             img.save(str(im_file))
 
-            im_paths.append(im_file)
+            im_files.append(im_file)
             numbers.append(number)
 
-        return im_paths, numbers
+        return im_files, numbers
 
     def create_dataset(
         self,
