@@ -1,0 +1,7 @@
+[project]
+name = "caml"
+version = "0.0.1"
+dependencies = [
+    "clearml",
+    "yacs",
+]
