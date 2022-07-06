@@ -9,7 +9,7 @@ from typing import List
 
 import yaml
 
-from .task.data.query import DataQueryTask
+from .task.query import DataQueryTask
 from .task.dl import EvalTask, TrainTask
 from .task.task import Task
 
@@ -41,11 +41,33 @@ def main():
     parser.add_argument('cmd', choices=Cmd.choices())
     parser.add_argument('--cfg-file')
     parser.add_argument('--requirement-file')
+    parser.add_argument('--dir')
 
     args = parser.parse_args()
 
     if args.cmd == Cmd.INIT:
-        pass
+        template_dir = Path(__file__).with_name('template')
+
+        if args.dir:
+            target_dir = Path(args.dir)
+
+            if target_dir.exists():
+                raise FileExistsError(f'{target_dir} already exists.')
+
+            target_dir.mkdir(parents=True)
+        else:
+            target_dir = Path(args.dir)
+
+        for i, (dirpath, dirnames, filenames) in enumerate(os.walk(template_dir)):
+            _dir = target_dir.joinpath(Path(dirpath).relative_to(template_dir))
+
+            if i:
+                _dir.mkdir()
+
+            for filename in filenames:
+                with Path(dirpath).joinpath(filename).open(mode='r') as fr:
+                    with _dir.joinpath(Path(filename).stem).open(mode='w') as fw:
+                        fw.write(fr.read())
     else:
         if args.cfg_file:
             cfg_file = args.cfg_file

@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 
 from torchvision.datasets import MNIST
 
-from caml.task.data.source import DataSource
+from caml.data_source import DataSource
 
 
 class MNISTSource(DataSource):
