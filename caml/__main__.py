@@ -101,3 +101,7 @@ def main():
             task = DataQueryTask(**config, requirement_file=requirement_file)
 
         task.run()
+
+
+if __name__ == '__main__':
+    main()

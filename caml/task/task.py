@@ -62,6 +62,7 @@ class Task(ABC):
         if self.remote:
             self._task.execute_remotely(self.queue_name)
 
+        self._task.output_uri = self._task_init['output_uri']
         self.execute(**self.execution)
 
     @abstractmethod
