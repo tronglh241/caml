@@ -16,3 +16,5 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    extra_hosts:
+      - host.docker.internal:host-gateway

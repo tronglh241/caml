@@ -28,10 +28,10 @@ class MNISTSource(DataSource):
         numbers = []
 
         for img, number in dataset:
-            _, im_file = tempfile.mkstemp(suffix='.jpg', dir=str(tmp_dir))
-            img.save(str(im_file))
+            with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as f:
+                img.save(f, format='JPEG')
 
-            im_files.append(im_file)
+            im_files.append(f.name)
             numbers.append(number)
 
         return im_files, numbers

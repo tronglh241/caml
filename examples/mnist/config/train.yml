@@ -1,5 +1,7 @@
 project_name: Test
 task_name: Train MNIST
+remote: True
+queue_name: default
 execution:
   model_conf:
     module: examples.mnist.model
@@ -11,4 +13,4 @@ execution:
     module: examples.mnist.dataset
     name: MNISTDataset
     kwargs:
-      id_: 1f7c83e84d9f446db0e987246a44d127
+      id_: 4b0ff23173154a69a63f05ffec83840a

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 import warnings
 from enum import Enum
 from pathlib import Path
@@ -12,6 +13,8 @@ import yaml
 from .task.dl import EvalTask, TrainTask
 from .task.query import DataQueryTask
 from .task.task import Task
+
+sys.path.append(os.getcwd())
 
 REQUIREMENT_FILE = 'requirements.txt'
 
@@ -36,27 +39,31 @@ class Cmd(str, Enum):
         return self.value
 
 
-def main():
+def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('cmd', choices=Cmd.choices())
+    parser.add_argument('directory', nargs='?')
     parser.add_argument('--cfg-file')
     parser.add_argument('--requirement-file')
-    parser.add_argument('--dir')
+    return parser
 
+
+def main():
+    parser = get_parser()
     args = parser.parse_args()
 
     if args.cmd == Cmd.INIT:
         template_dir = Path(__file__).with_name('template')
 
-        if args.dir:
-            target_dir = Path(args.dir)
+        if args.directory:
+            target_dir = Path(args.directory)
 
             if target_dir.exists():
                 raise FileExistsError(f'{target_dir} already exists.')
 
             target_dir.mkdir(parents=True)
         else:
-            target_dir = Path(args.dir)
+            target_dir = Path(os.getcwd())
 
         for i, (dirpath, dirnames, filenames) in enumerate(os.walk(template_dir)):
             _dir = target_dir.joinpath(Path(dirpath).relative_to(template_dir))
@@ -81,10 +88,9 @@ def main():
             requirement_file = args.requirement_file
         else:
             requirement_file_p = Path(os.getcwd()).joinpath(REQUIREMENT_FILE)
+            requirement_file = str(requirement_file_p)
 
-            if requirement_file_p.exists():
-                requirement_file = str(requirement_file_p)
-            else:
+            if not requirement_file_p.exists():
                 warnings.warn('Cannot find requirement file.')
 
         if args.cmd == Cmd.TRAIN:

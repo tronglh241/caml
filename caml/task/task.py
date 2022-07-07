@@ -10,6 +10,7 @@ class Task(ABC):
     _requirements = [
         ('clearml', ''),
         ('yacs', ''),
+        ('git+ssh://git@github.com/tronglh241/caml.git@dev', '')
     ]
     _task_init: Dict[str, Any] = {
         'output_uri': True,

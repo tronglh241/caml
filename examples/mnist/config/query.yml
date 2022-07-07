@@ -1,5 +1,6 @@
 project_name: Test
 task_name: Query random MNIST
+remote: True
 execution:
   strategy: random
   n_samples: 1000
