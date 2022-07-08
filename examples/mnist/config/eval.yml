@@ -1,5 +1,7 @@
 project_name: Test
 task_name: Eval MNIST
+remote: True
+queue_name: default
 execution:
   model_conf:
     module: examples.mnist.model

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from clearml import Task as _Task
 
@@ -24,6 +24,7 @@ class Task(ABC):
         task_init: Dict[str, Any] = None,
         execution: Dict[str, Any] = None,
         requirement_file: str = None,
+        ignored_requirements: List[str] = None,
         remote: bool = False,
         queue_name: str = 'default',
     ):
@@ -33,6 +34,7 @@ class Task(ABC):
         self.task_init = task_init if task_init else {}
         self.execution = execution if execution else {}
         self.requirement_file = requirement_file
+        self.ignored_requirements = ignored_requirements
         self.remote = remote
         self.queue_name = queue_name
 
@@ -46,6 +48,10 @@ class Task(ABC):
 
         if self.requirement_file:
             _Task.add_requirements(self.requirement_file)
+
+        if self.ignored_requirements:
+            for ignored_requirement in self.ignored_requirements:
+                _Task.ignore_requirements(requirement)
 
         _Task.init(
             project_name=self.project_name,

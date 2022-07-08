@@ -1,6 +1,9 @@
 project_name: Test
 task_name: Query random MNIST
 remote: True
+queue_name: default
+ignored_requirements:
+  - pytorch_ignite
 execution:
   strategy: random
   n_samples: 1000
