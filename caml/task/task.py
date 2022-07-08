@@ -43,15 +43,15 @@ class Task(ABC):
         return _Task.current_task()
 
     def run(self) -> None:
-        if self.ignored_requirements:
-            for ignored_requirement in self.ignored_requirements:
-                _Task.ignore_requirements(ignored_requirement)
-
         for requirement in Task._requirements:
             _Task.add_requirements(*requirement)
 
         if self.requirement_file:
             _Task.add_requirements(self.requirement_file)
+
+        if self.ignored_requirements:
+            for ignored_requirement in self.ignored_requirements:
+                _Task.ignore_requirements(ignored_requirement)
 
         _Task.init(
             project_name=self.project_name,
