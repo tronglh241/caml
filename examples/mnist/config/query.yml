@@ -11,4 +11,4 @@ execution:
     module: data_source
     name: MNISTSource
     kwargs:
-      split: test
+      split: train
