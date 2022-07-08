@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
 import warnings
 from enum import Enum
 from pathlib import Path
@@ -13,8 +12,6 @@ import yaml
 from .task.dl import EvalTask, TrainTask
 from .task.query import DataQueryTask
 from .task.task import Task
-
-sys.path.append(os.getcwd())
 
 REQUIREMENT_FILE = 'requirements.txt'
 TEMPLATE_EXT = '.tpl'
