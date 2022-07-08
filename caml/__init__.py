@@ -17,42 +17,36 @@ from .task.task import Task
 sys.path.append(os.getcwd())
 
 REQUIREMENT_FILE = 'requirements.txt'
+TEMPLATE_EXT = '.tpl'
 
 
 class Cmd(str, Enum):
-    TRAIN = 'train'
-    EVAL = 'eval'
-    QUERY = 'query'
-    INIT = 'init'
-
     @classmethod
     def choices(cls) -> List[Cmd]:
-        cs = [
-            cls.TRAIN,
-            cls.EVAL,
-            cls.QUERY,
-            cls.INIT,
-        ]
+        cs = [c.value for c in cls._member_map_.values()]
         return cs
 
     def __str__(self) -> str:
         return self.value
 
 
-def get_parser():
+class InitCmd(Cmd):
+    INIT = 'init'
+
+
+class ExecCmd(Cmd):
+    TRAIN = 'train'
+    EVAL = 'eval'
+    QUERY = 'query'
+
+
+def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('cmd', choices=Cmd.choices())
+    parser.add_argument('cmd', choices=InitCmd.choices())
     parser.add_argument('directory', nargs='?')
-    parser.add_argument('--cfg-file')
-    parser.add_argument('--requirement-file')
-    return parser
-
-
-def main():
-    parser = get_parser()
     args = parser.parse_args()
 
-    if args.cmd == Cmd.INIT:
+    if args.cmd == InitCmd.INIT:
         template_dir = Path(__file__).with_name('template')
 
         if args.directory:
@@ -73,35 +67,39 @@ def main():
 
             for filename in filenames:
                 with Path(dirpath).joinpath(filename).open(mode='r') as fr:
-                    with _dir.joinpath(Path(filename).stem).open(mode='w') as fw:
+                    with _dir.joinpath(Path(filename).name.replace(TEMPLATE_EXT, '')).open(mode='w') as fw:
                         fw.write(fr.read())
+
+
+def execute():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('cmd', choices=ExecCmd.choices())
+    parser.add_argument('cfg_file', nargs='?')
+    parser.add_argument('requirement_file', nargs='?')
+    args = parser.parse_args()
+
+    if args.cfg_file:
+        cfg_file = args.cfg_file
     else:
-        if args.cfg_file:
-            cfg_file = args.cfg_file
-        else:
-            cfg_file = Path(os.getcwd()).joinpath('config', f'{args.cmd}.yml')
+        cfg_file = Path(os.getcwd()).joinpath('config', f'{args.cmd}.yml')
 
-        with open(cfg_file) as f:
-            config = yaml.safe_load(f)
+    with open(cfg_file) as f:
+        config = yaml.safe_load(f)
 
-        if args.requirement_file:
-            requirement_file = args.requirement_file
-        else:
-            requirement_file_p = Path(os.getcwd()).joinpath(REQUIREMENT_FILE)
-            requirement_file = str(requirement_file_p)
+    if args.requirement_file:
+        requirement_file = args.requirement_file
+    else:
+        requirement_file_p = Path(os.getcwd()).joinpath(REQUIREMENT_FILE)
+        requirement_file = str(requirement_file_p)
 
-            if not requirement_file_p.exists():
-                warnings.warn('Cannot find requirement file.')
+        if not requirement_file_p.exists():
+            warnings.warn('Cannot find requirement file.')
 
-        if args.cmd == Cmd.TRAIN:
-            task: Task = TrainTask(**config, requirement_file=requirement_file)
-        elif args.cmd == Cmd.EVAL:
-            task = EvalTask(**config, requirement_file=requirement_file)
-        elif args.cmd == Cmd.QUERY:
-            task = DataQueryTask(**config, requirement_file=requirement_file)
+    if args.cmd == ExecCmd.TRAIN:
+        task: Task = TrainTask(**config, requirement_file=requirement_file)
+    elif args.cmd == ExecCmd.EVAL:
+        task = EvalTask(**config, requirement_file=requirement_file)
+    elif args.cmd == ExecCmd.QUERY:
+        task = DataQueryTask(**config, requirement_file=requirement_file)
 
-        task.run()
-
-
-if __name__ == '__main__':
-    main()
+    task.run()
