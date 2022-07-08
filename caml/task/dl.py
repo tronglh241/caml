@@ -71,8 +71,8 @@ class EvalTask(DLTask):
         value: float,
     ) -> None:
         self._task.get_logger().report_scalar(
-            title=name,
-            series='best',
+            title='Evaluation',
+            series=name,
             value=value,
             iteration=1,
         )

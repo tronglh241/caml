@@ -1,16 +1,15 @@
 from typing import Any, Optional, Tuple
 
 import torch
+from mnist import main
+from mnist.dataset import MNISTDataset
+from mnist.net import MNISTNet
 from torch.nn import NLLLoss
 from torch.optim import SGD
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
 from caml.model import EvalModel, TrainModel
-
-from .mnist import main
-from .mnist.dataset import MNISTDataset
-from .mnist.net import MNISTNet
 
 
 def get_data_loader(
