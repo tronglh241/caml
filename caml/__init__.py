@@ -14,7 +14,7 @@ from .task.query import DataQueryTask
 from .task.task import Task
 
 REQUIREMENT_FILE = 'requirements.txt'
-TEMPLATE_EXT = '.tpl'
+TEMPLATE_SUFFIX = '-tpl'
 
 
 class Cmd(str, Enum):
@@ -64,7 +64,7 @@ def init():
 
             for filename in filenames:
                 with Path(dirpath).joinpath(filename).open(mode='r') as fr:
-                    with _dir.joinpath(Path(filename).name.replace(TEMPLATE_EXT, '')).open(mode='w') as fw:
+                    with _dir.joinpath(Path(filename).name.replace(TEMPLATE_SUFFIX, '')).open(mode='w') as fw:
                         fw.write(fr.read())
 
 
