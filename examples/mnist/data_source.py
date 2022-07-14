@@ -1,7 +1,7 @@
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Tuple
 
 from torchvision.datasets import MNIST
 
@@ -19,7 +19,7 @@ class MNISTSource(DataSource):
 
         self.split = split
 
-    def samples(self) -> Tuple[list, Optional[list]]:
+    def samples(self) -> Tuple[list, list]:
         dataset = MNIST(download=True, root=tempfile.gettempdir(), train=self.split == 'train')
         tmp_dir = Path(tempfile.mkdtemp())
         tmp_dir.mkdir(parents=True, exist_ok=True)
