@@ -6,6 +6,8 @@ from copy import deepcopy
 from pathlib import Path
 from typing import List, Optional
 
+from tqdm import tqdm
+
 from .annotation import Annotation
 from .base import Element
 from .category import Category
@@ -84,17 +86,21 @@ class Label(Element):
         with open(file_path, mode='w', encoding='utf-8') as f:
             json.dump(self.json, f, indent=4)
 
+    @staticmethod
     def merge(
-        self,
-        other: Label,
+        labels: List[Label],
     ) -> Label:
-        if not self.mergeable(other):
-            raise ValueError('Two labels are not mergeable.')
+        if not len(labels):
+            raise ValueError('`labels` is empty.')
+
+        for i in range(len(labels) - 1):
+            if not labels[i].mergeable(labels[i + 1]):
+                raise ValueError('Labels are not mergeable.')
 
         images: List[Image] = []
         annotations: List[Annotation] = []
 
-        for label in [self, other]:
+        for label in tqdm(labels, desc='Merging labels', leave=False):
             image_map = {}
 
             for image in label.images:
@@ -112,9 +118,9 @@ class Label(Element):
         merged_label = Label(
             images,
             annotations,
-            deepcopy(self.categories),
-            deepcopy(self.info),
-            deepcopy(self.licenses),
+            deepcopy(labels[0].categories),
+            deepcopy(labels[0].info),
+            deepcopy(labels[0].licenses),
         )
 
         return merged_label

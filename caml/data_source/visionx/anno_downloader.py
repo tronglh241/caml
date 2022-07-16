@@ -1,34 +1,25 @@
-import time
-from enum import Enum
 from __future__ import annotations
-from typing import List
-import requests
-import shutil
-from pathlib import Path
-import tempfile
 
+import re
+import tempfile
+import time
+from pathlib import Path
+from typing import List
+
+import requests
+from tqdm import tqdm
+
+from .format.format import Format
+from .token import Token
 
 BASE_URL = 'https://visionx.smart-data.ml'
-
-
-class Format(str, Enum):
-    CVAT = 'CVAT for images 1.1'
-    COCO_MONASH = 'COCO Keypoint for Monash 1.0'
-
-    @classmethod
-    def choices(cls) -> List[Format]:
-        cs = [c.value for c in cls._member_map_.values()]
-        return cs
-
-    def __str__(self) -> str:
-        return self.value
 
 
 class TaskAnnoDownloader:
     def __init__(
         self,
         format_: str,
-        token: str,
+        token: Token,
         timeout: int = 120,
     ):
         super(TaskAnnoDownloader, self).__init__()
@@ -53,7 +44,7 @@ class TaskAnnoDownloader:
                     'action': 'download',
                 },
                 headers={
-                    'Authorization': f'Bearer {self.token}',
+                    'Authorization': f'Bearer {self.token.get()}',
                 },
                 stream=True,
             )
@@ -61,14 +52,40 @@ class TaskAnnoDownloader:
 
             if res.status_code == 200:
                 break
+            elif res.status_code == 401:
+                self.token.refresh()
             else:
                 time.sleep(1)
 
         if res.status_code == 200:
-            anno_zip = Path(tempfile.gettempdir()).joinpath(str(task_id)).with_suffix('.zip')
+            file_size = int(res.headers.get('Content-Length', 0))
+            file_names = re.findall('(?<=filename=).*(?=;)', res.headers.get('Content-Disposition', ''))
 
-            with anno_zip.open(mode='wb') as f:
-                shutil.copyfileobj(res.raw, f)
+            if file_names:
+                file_name = Path(eval(eval(file_names[0])).decode('utf8'))
+            else:
+                file_name = Path(str(task_id)).with_suffix('.zip')
+
+            anno_zip = Path(tempfile.gettempdir()).joinpath(file_name)
+
+            if anno_zip.exists() and anno_zip.stat().st_size == file_size:
+                print(f'Task #{task_id} is already downloaded.')
+            else:
+                while not (anno_zip.exists() and anno_zip.stat().st_size == file_size):
+                    pbar = tqdm(
+                        desc=f'Task #{task_id}',
+                        total=file_size,
+                        unit='iB',
+                        unit_scale=True,
+                    )
+                    block_size = 1024
+
+                    with anno_zip.open(mode='wb') as f:
+                        for data in res.iter_content(block_size):
+                            pbar.update(len(data))
+                            f.write(data)
+
+                    pbar.close()
 
             return str(anno_zip)
         else:
@@ -79,7 +96,7 @@ class ProjectAnnoDownloader:
     def __init__(
         self,
         format_: str,
-        token: str,
+        token: Token,
         timeout: int = 120,
     ):
         super(ProjectAnnoDownloader, self).__init__()
@@ -97,7 +114,7 @@ class ProjectAnnoDownloader:
         res = requests.get(
             url=f'{BASE_URL}/api/v1/projects/{project_id}',
             headers={
-                'Authorization': f'Bearer {self.token}',
+                'Authorization': f'Bearer {self.token.get()}',
             },
         )
         res.raise_for_status()
@@ -108,6 +125,9 @@ class ProjectAnnoDownloader:
             timeout=self.timeout,
         )
         task_ids = sorted([task['id'] for task in res.json()['tasks']])
-        task_anno_zips = [task_anno_downloader(task_id) for task_id in task_ids]
+        task_anno_zips = []
+
+        for task_id in task_ids:
+            task_anno_zips.append(task_anno_downloader(task_id))
 
         return task_anno_zips
