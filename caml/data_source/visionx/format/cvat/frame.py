@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from typing import List
 
 from .base import Element
-from .instance import Box, Cuboid, Instance, Points, Polygon, Polyline
+from .instance import Box, Cuboid, Instance, Points, Polygon, Polyline, Tag
 
 
 class Frame(Element):
@@ -15,6 +15,7 @@ class Frame(Element):
         Points,
         Polygon,
         Polyline,
+        Tag,
     ]
 
     def __init__(self, id_: int, name: str, width: int, height: int, instances: List[Instance]):

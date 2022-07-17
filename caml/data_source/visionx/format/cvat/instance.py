@@ -41,6 +41,41 @@ class Corner(Enum):
     ybr2 = 'ybr2'
 
 
+class Tag(Instance):
+    tag = 'tag'
+
+    def __init__(
+        self,
+        label: str,
+        source: SourceType,
+        attribs: List[Attrib] = None,
+    ):
+        super(Tag, self).__init__()
+        self.label = label
+        self.source = source
+        self.attribs = attribs
+
+    @classmethod
+    def parse(cls, tag: ET.Element) -> Tag:
+        label = tag.attrib['label']
+        source = SourceType(tag.attrib['source'])
+        attribs = cls.parse_attr(tag)
+        return cls(label, source, attribs)
+
+    @property
+    def xml(self) -> ET.Element:
+        attrib = {
+            'label': self.label,
+            'source': self.source.value,
+        }
+        ele = ET.Element(self.tag, attrib)
+
+        if self.attribs:
+            ele.extend([attrib.xml for attrib in self.attribs])
+
+        return ele
+
+
 class Box(Instance):
     tag = 'box'
 
