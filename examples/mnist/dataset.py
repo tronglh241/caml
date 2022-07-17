@@ -1,7 +1,7 @@
-import random
 from pathlib import Path
 
 from caml.dataset import Dataset
+from caml.data_source.visionx.format.cvat.label import Label
 
 
 class MNISTDataset(Dataset):
@@ -24,13 +24,21 @@ class MNISTDataset(Dataset):
     ) -> None:
         im_files = []
         numbers = []
+        data_dir = Path(path)
+        im_dir = data_dir.joinpath('images')
+        anno_file = data_dir.joinpath('annotations.xml')
 
-        imgs = list(Path(path).glob('*/*.jpg'))
-        random.shuffle(imgs)
+        label = Label.fromfile(str(anno_file))
 
-        for im_file in imgs:
+        for frame in label.frames:
+            im_file = im_dir.joinpath(frame.name)
+            number = int(frame.instances[0].label)
+
+            if not im_file.exists():
+                raise FileNotFoundError(str(im_file))
+
             im_files.append(im_file)
-            numbers.append(int(im_file.parent.name))
+            numbers.append(number)
 
         self._X = im_files
         self._y = numbers
