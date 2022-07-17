@@ -38,7 +38,7 @@ class VisionX(DataSource):
         if format_ not in Format.choices():
             raise ValueError(f'`format_` must be one of {Format.choices()}.')
 
-        if project_id is not None and task_ids is not None:
+        if (project_id is None) == (task_ids is None):
             raise ValueError('Either `project_id` or `task_ids` is specified.')
 
         _token = self.get_token()

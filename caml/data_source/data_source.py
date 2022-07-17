@@ -11,6 +11,6 @@ class DataSource(ABC):
     def create_dataset(
         self,
         samples: list,
-        targets: list = None,
+        targets: list,
     ) -> str:
         pass

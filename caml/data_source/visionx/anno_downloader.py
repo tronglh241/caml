@@ -52,8 +52,6 @@ class TaskAnnoDownloader:
 
             if res.status_code == 200:
                 break
-            elif res.status_code == 401:
-                self.token.refresh()
             else:
                 time.sleep(1)
 
