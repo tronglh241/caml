@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from caml.dataset import Dataset
 from caml.data_source.visionx.format.cvat.label import Label
+from caml.dataset import Dataset
 
 
 class MNISTDataset(Dataset):

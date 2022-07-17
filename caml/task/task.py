@@ -3,6 +3,8 @@ from typing import Any, Dict, List
 
 from clearml import Task as _Task
 
+from caml.config import Config
+
 EXECUTION_PARAMS = 'Execution'
 
 
@@ -63,6 +65,12 @@ class Task(ABC):
                 self.execution,
                 name=EXECUTION_PARAMS,
             )
+
+            for key, value in list(self.execution.items()):
+                if key.endswith('_conf'):
+                    value = Config(value).eval()
+                    self.execution.pop(key)
+                    self.execution[key[:-5]] = value
 
         if self.remote:
             self._task.execute_remotely(self.queue_name)

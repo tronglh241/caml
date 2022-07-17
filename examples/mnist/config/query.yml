@@ -13,3 +13,4 @@ execution:
     kwargs:
       task_ids:
         - 32782
+      format_: CVAT for images 1.1
