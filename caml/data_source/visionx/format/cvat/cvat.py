@@ -34,7 +34,7 @@ class CVAT(Format):
         same_filename_cnt: Dict[str, int] = defaultdict(int)
 
         for i, (im_file, frame) in enumerate(samples):
-            im_outfile = im_dir.joinpath(Path(im_file).name)
+            im_outfile = im_dir.joinpath(frame.name)
 
             if im_outfile.exists():
                 same_filename_cnt[im_outfile.name] += 1
