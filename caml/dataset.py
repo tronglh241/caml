@@ -11,11 +11,10 @@ class Dataset(ABC):
         path: str = None,
         id_: str = None,
     ):
-        if id_ is not None:
-            self.path = _Dataset.get(id_).get_local_copy()
-        elif path is not None:
-            self.path = path
-        else:
+        self.path = path
+        self.id = id_
+
+        if (path is None) == (id_ is None):
             raise ValueError('Must specify `path` or `id_`.')
 
     @abstractmethod
@@ -34,4 +33,9 @@ class Dataset(ABC):
         pass
 
     def load(self) -> None:
-        self.load_dataset(self.path)
+        if self.id is not None:
+            path = _Dataset.get(self.id).get_local_copy()
+        elif self.path is not None:
+            path = self.path
+
+        self.load_dataset(path)
