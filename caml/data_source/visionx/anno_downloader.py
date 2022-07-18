@@ -55,6 +55,9 @@ class TaskAnnoDownloader:
             else:
                 time.sleep(1)
 
+        if time.time() - req_start > self.timeout:
+            raise TimeoutError
+
         if res.status_code == 200:
             file_size = int(res.headers.get('Content-Length', 0))
             file_names = re.findall('(?<=filename=).*(?=;)', res.headers.get('Content-Disposition', ''))
