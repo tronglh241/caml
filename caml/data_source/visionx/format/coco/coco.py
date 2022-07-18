@@ -34,7 +34,7 @@ class COCO(Format):
         same_filename_cnt: Dict[str, int] = defaultdict(int)
 
         for im_file, frame in samples:
-            im_outfile = im_dir.joinpath(Path(im_file).name)
+            im_outfile = im_dir.joinpath(frame.images[0].file_name)
 
             if im_outfile.exists():
                 same_filename_cnt[im_outfile.name] += 1
@@ -42,6 +42,7 @@ class COCO(Format):
                     f'{im_outfile.stem}_{same_filename_cnt[im_outfile.name]}{im_outfile.suffix}',
                 )
 
+            im_outfile.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(im_file, str(im_outfile))
             frames.append(frame)
 

@@ -42,6 +42,7 @@ class CVAT(Format):
                     f'{im_outfile.stem}_{same_filename_cnt[im_outfile.name]}{im_outfile.suffix}',
                 )
 
+            im_outfile.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(im_file, str(im_outfile))
 
             frame.id = i
