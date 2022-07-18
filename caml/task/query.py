@@ -41,7 +41,8 @@ class DataQueryTask(Task):
 
         data_path = data_source.create_dataset(samples, targets)
         dataset = _Dataset.create(
-            use_current_task=True,
+            dataset_project=self.project_name,
+            dataset_name=self.task_name,
         )
         dataset.add_files(path=data_path)
         dataset.upload()
