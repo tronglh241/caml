@@ -12,14 +12,15 @@ from tqdm import tqdm
 from .format.format import Format
 from .token import Token
 
-BASE_URL = 'https://visionx.smart-data.ml'
+BASE_URL = 'http://localhost:3000'
+# BASE_URL = 'https://visionx.smart-data.ml'
 
 
 class TaskAnnoDownloader:
     def __init__(
         self,
-        format_: str,
         token: Token,
+        format_: str = 'CVAT for images 1.1',
         timeout: int = 120,
     ):
         super(TaskAnnoDownloader, self).__init__()
@@ -96,8 +97,8 @@ class TaskAnnoDownloader:
 class ProjectAnnoDownloader:
     def __init__(
         self,
-        format_: str,
         token: Token,
+        format_: str = 'CVAT for images 1.1',
         timeout: int = 120,
     ):
         super(ProjectAnnoDownloader, self).__init__()

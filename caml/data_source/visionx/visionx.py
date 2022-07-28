@@ -23,7 +23,7 @@ REQUEST_TIME = 'request_time'
 class VisionX(DataSource):
     def __init__(
         self,
-        format_: str,
+        format_: str = 'CVAT for images 1.1',
         project_id: int = None,
         task_ids: List[int] = None,
         timeout: int = 120,
@@ -86,9 +86,17 @@ class VisionX(DataSource):
         _samples, targets = [], []
 
         if self.project_id is not None:
-            task_anno_zips = ProjectAnnoDownloader(self.format, self.token, self.timeout)(self.project_id)
+            task_anno_zips = ProjectAnnoDownloader(
+                format_=self.format,
+                token=self.token,
+                timeout=self.timeout,
+            )(self.project_id)
         elif self.task_ids is not None:
-            task_anno_downloader = TaskAnnoDownloader(self.format, self.token, self.timeout)
+            task_anno_downloader = TaskAnnoDownloader(
+                format_=self.format,
+                token=self.token,
+                timeout=self.timeout,
+            )
             task_anno_zips = [task_anno_downloader(task_id) for task_id in self.task_ids]
 
         for anno_zip in task_anno_zips:

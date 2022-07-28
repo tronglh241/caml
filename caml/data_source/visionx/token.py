@@ -4,11 +4,17 @@ import time
 
 import requests
 
-KEYCLOAK_TOKEN_URL = 'https://keys.smart-data.ml/auth/realms/vinai/protocol/openid-connect/token'
+KEYCLOAK_TOKEN_URL = 'https://keycloak.dp.vinai-systems.com/auth/realms/vinai/protocol/openid-connect/token'
 GRANT_TYPE_PASSWORD = 'password'
 GRANT_TYPE_REFRESH_TOKEN = 'refresh_token'
-CLIENT_ID = 'sd-client'
-CLIENT_SECRET = 'c5248237-adac-43dd-8e27-726e4d5e6c79'
+CLIENT_ID = 'dp-service'
+CLIENT_SECRET = '27bb8fb7-68ad-4932-a7c5-c8ecb114f3f8'
+
+# KEYCLOAK_TOKEN_URL = 'https://keys.smart-data.ml/auth/realms/vinai/protocol/openid-connect/token'
+# GRANT_TYPE_PASSWORD = 'password'
+# GRANT_TYPE_REFRESH_TOKEN = 'refresh_token'
+# CLIENT_ID = 'sd-client'
+# CLIENT_SECRET = 'c5248237-adac-43dd-8e27-726e4d5e6c79'
 
 
 class Token:

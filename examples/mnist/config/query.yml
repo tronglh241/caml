@@ -1,5 +1,5 @@
 project_name: Test
-task_name: Query random MNIST
+task_name: MNIST
 remote: True
 queue_name: query
 ignored_requirements:
