@@ -12,14 +12,17 @@ class Model(ABC):
         path: str = None,
         id_: str = None,
     ):
-        if id_ is not None:
-            self.path = _Model(id_).get_local_copy()
-        else:
-            self.path = path
+        self.path = path
+        self.id = id_
 
     def load(self) -> None:
-        if self.path:
-            self.load_model(self.path)
+        if self.id is not None:
+            path = _Model(self.id).get_local_copy()
+        else:
+            path = self.path
+
+        if path:
+            self.load_model(path)
 
     @abstractmethod
     def load_model(

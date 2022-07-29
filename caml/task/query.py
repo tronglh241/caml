@@ -3,7 +3,8 @@ from typing import Any, Dict
 from clearml import Dataset as _Dataset
 from clearml import TaskTypes
 
-from caml.config import Config
+from caml.data_source import DataSource
+from caml.model import EvalModel
 from caml.strategy.strategy import Strategy
 from caml.task.task import Task
 
@@ -23,14 +24,11 @@ class DataQueryTask(Task):
     def execute(
         self,
         strategy: str,
-        data_source_conf: Dict[str, Any],
-        model_conf: Dict[str, Any] = None,
+        data_source: DataSource,
+        model: EvalModel = None,
         strategy_kwargs: Dict[str, Any] = None,
         n_samples: int = None,
     ) -> None:
-        data_source = Config(data_source_conf).eval()
-        model = Config(model_conf).eval() if model_conf else None
-
         _strategy_kwargs = {} if strategy_kwargs is None else strategy_kwargs
         _strategy = Strategy.get(strategy, **_strategy_kwargs)
 
@@ -43,7 +41,8 @@ class DataQueryTask(Task):
 
         data_path = data_source.create_dataset(samples, targets)
         dataset = _Dataset.create(
-            use_current_task=True,
+            dataset_project=self.project_name,
+            dataset_name=self.task_name,
         )
         dataset.add_files(path=data_path)
         dataset.upload()
