@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import tempfile
 import time
@@ -12,8 +13,7 @@ from tqdm import tqdm
 from .format.format import Format
 from .token import Token
 
-BASE_URL = 'http://localhost:3000'
-# BASE_URL = 'https://visionx.smart-data.ml'
+BASE_URL = os.getenv('BASE_URL', 'https://visionx.smart-data.ml')
 
 
 class TaskAnnoDownloader:
