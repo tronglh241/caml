@@ -1,7 +1,7 @@
 project_name: Test
 task_name: Eval MNIST
 remote: True
-queue_name: default
+queue_name: eval
 ignored_requirements:
   - pytorch_ignite
 execution:
@@ -9,10 +9,10 @@ execution:
     module: model
     name: MNISTEvalModel
     kwargs:
-      id_: 178d786bba1c45aeab70c25a1f70a122
+      id_: 6e45951fd97f45069d4c59f6e2c6ebf6
       batch_size: 64
   dataset_conf:
     module: dataset
     name: MNISTDataset
     kwargs:
-      id_: 8a24087d9f6545c58bf98824ecc126e9
+      id_: 583a8fff8f3b4307812eac1cfe00a5d9

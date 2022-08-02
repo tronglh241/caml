@@ -1,7 +1,7 @@
 project_name: Test
 task_name: Train MNIST
 remote: True
-queue_name: default
+queue_name: train
 ignored_requirements:
   - pytorch_ignite
 execution:
@@ -15,4 +15,4 @@ execution:
     module: dataset
     name: MNISTDataset
     kwargs:
-      id_: 8a24087d9f6545c58bf98824ecc126e9
+      id_: 583a8fff8f3b4307812eac1cfe00a5d9

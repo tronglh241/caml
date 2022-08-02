@@ -1,33 +1,10 @@
-from abc import ABC, abstractmethod
-from typing import Any, Dict
-
-from caml.config import Config
 from caml.dataset import Dataset
-from caml.model import EvalModel, Model, TrainModel
+from caml.model import EvalModel, TrainModel
 from caml.task.task import Task
 
 
-class DLTask(Task, ABC):
+class TrainTask(Task):
     def execute(
-        self,
-        model_conf: Dict[str, Any],
-        dataset_conf: Dict[str, Any],
-    ) -> None:
-        model = Config(model_conf).eval()
-        dataset = Config(dataset_conf).eval()
-        self.process(model, dataset)
-
-    @abstractmethod
-    def process(
-        self,
-        model: Model,
-        dataset: Dataset,
-    ) -> None:
-        pass
-
-
-class TrainTask(DLTask):
-    def process(
         self,
         model: TrainModel,
         dataset: Dataset,
@@ -51,8 +28,8 @@ class TrainTask(DLTask):
         )
 
 
-class EvalTask(DLTask):
-    def process(
+class EvalTask(Task):
+    def execute(
         self,
         model: EvalModel,
         dataset: Dataset,
