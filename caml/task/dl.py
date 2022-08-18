@@ -38,8 +38,7 @@ class EvalTask(Task):
         model.load()
         X = dataset.X()
         y = dataset.y()
-        pred = model.predict(X)
-        score_name, score_value = model.eval(pred, y)
+        score_name, score_value = model.eval(X, y)
         self.upload_score(score_name, score_value)
 
     def upload_score(
