@@ -132,10 +132,11 @@ class MNISTEvalModel(EvalModel):
 
     def eval(
         self,
-        pred: list,
+        X: list,
         y: list,
     ) -> Tuple[str, float]:
-        assert len(pred) == len(y)
+        assert len(X) == len(y)
+        pred = self.predict(X)
         n_trues = sum([_pred == _y for _pred, _y in zip(pred, y)])
         acc = n_trues / len(y)
         return 'accuracy', acc
